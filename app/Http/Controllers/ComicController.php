@@ -90,30 +90,36 @@ class ComicController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Comic $comic)
-{
-    // Validazione dei dati in entrata
-    $validated = $request->validate([
-        'title' => 'required|max:255',
-        'description' => 'required',
-        'thumb' => 'required|url',
-        'price' => 'required|numeric',
-        'series' => 'required|string',
-        'sale_date' => 'required|date',
-        'type' => 'required|string',
-        'artists' => 'required|array',
-        'writers' => 'required|array',
-    ]);
+    {
+        // Converti le stringhe separate da virgole in array
+        $request->merge([
+            'artists' => explode(',', $request->input('artists')),
+            'writers' => explode(',', $request->input('writers')),
+        ]);
 
-    // Converti gli array in stringhe JSON prima del salvataggio
-    $validated['artists'] = json_encode($validated['artists']);
-    $validated['writers'] = json_encode($validated['writers']);
+        // Validazione dei dati in entrata
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'thumb' => 'required|url',
+            'price' => 'required|numeric',
+            'series' => 'required|string',
+            'sale_date' => 'required|date',
+            'type' => 'required|string',
+            'artists' => 'required|array',
+            'writers' => 'required|array',
+        ]);
 
-    // Aggiorna il fumetto nel database utilizzando i dati validati
-    $comic->update($validated);
+        // Converti gli array in stringhe JSON prima del salvataggio
+        $validated['artists'] = json_encode($validated['artists']);
+        $validated['writers'] = json_encode($validated['writers']);
 
-    // Reindirizza l'utente a una pagina appropriata dopo l'aggiornamento
-    return redirect()->route('comics.show', $comic);
-}
+        // Aggiorna il fumetto nel database utilizzando i dati validati
+        $comic->update($validated);
+
+        // Reindirizza l'utente a una pagina appropriata dopo l'aggiornamento
+        return redirect()->route('comics.show', $comic);
+    }
 
     /**
      * Remove the specified resource from storage.

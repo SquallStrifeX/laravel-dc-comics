@@ -20,5 +20,11 @@ class Comic extends Model
         'writers',
     ];
 
+    protected $dates = ['sale_date'];
+// or
+protected $casts = [
+    'sale_date' => 'datetime',
+];
+
     // Il resto del codice del modello...
 }
