@@ -12,6 +12,8 @@
             <p class="card-text"><strong>Artisti:</strong> {{ implode(', ', json_decode($comic->artists, true)) }}</p>
             <p class="card-text"><strong>Scrittori:</strong> {{ implode(', ', json_decode($comic->writers, true)) }}</p>
             <a href="{{ route('comics.index') }}" class="btn btn-primary">Torna all'elenco</a>
+            <a href="{{ route('comics.edit', $comic->id) }}" class="btn btn-primary">Modifica Fumetto</a>
+
         </div>
     </div>
 </div>

@@ -18,6 +18,9 @@
 
 <div class="container">
     <div class="row">
+        <a href="{{ route('comics.create') }}"><button type="button" class="btn btn-primary my-5">Aggiungi un Fumetto</button></a>
+
+
 @foreach ($comics as $comic)
 <div class="col-md-4">
                     <div class="card">
