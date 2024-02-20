@@ -129,6 +129,10 @@ class ComicController extends Controller
      */
     public function destroy(Comic $comic)
     {
-        // Codice per eliminare il fumetto
+        // Elimina il fumetto specificato dal database
+        $comic->delete();
+
+        // Reindirizza l'utente alla lista dei fumetti con un messaggio di conferma
+        return redirect()->route('comics.index')->with('success', 'Fumetto eliminato con successo');
     }
 }
