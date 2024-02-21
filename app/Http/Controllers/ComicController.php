@@ -35,30 +35,43 @@ class ComicController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        // Validazione dei dati in entrata
-        $validated = $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
-            'thumb' => 'required|url',
-            'price' => 'required|numeric',
-            'series' => 'required|string',
-            'sale_date' => 'required|date',
-            'type' => 'required|string',
-            'artists' => 'required|array',
-            'writers' => 'required|array',
-        ]);
+{
+    // Validazione dei dati in entrata con messaggi di errore personalizzati
+    $validated = $request->validate([
+        'title' => 'required|max:255',
+        'description' => 'required',
+        'thumb' => 'required|url',
+        'price' => 'required|numeric',
+        'series' => 'required|string',
+        'sale_date' => 'required|date',
+        'type' => 'required|string',
+        'artists' => 'required|array',
+        'writers' => 'required|array',
+    ], [
+        'title.required' => 'Il titolo è obbligatorio.',
+        'description.required' => 'La descrizione è obbligatoria.',
+        'thumb.required' => 'Il link all\'immagine di copertina è obbligatorio.',
+        'thumb.url' => 'Il link all\'immagine di copertina deve essere un URL valido.',
+        'price.required' => 'Il prezzo è obbligatorio.',
+        'price.numeric' => 'Il prezzo deve essere un numero.',
+        'series.required' => 'La serie è obbligatoria.',
+        'sale_date.required' => 'La data di vendita è obbligatoria.',
+        'sale_date.date' => 'La data di vendita deve essere una data valida.',
+        'type.required' => 'Il tipo è obbligatorio.',
+        'artists.required' => 'È necessario specificare almeno un artista.',
+        'writers.required' => 'È necessario specificare almeno uno scrittore.',
+    ]);
 
-        // Converti gli array in stringhe JSON prima del salvataggio
-        $validated['artists'] = json_encode($validated['artists']);
-        $validated['writers'] = json_encode($validated['writers']);
+    // Converti gli array in stringhe JSON prima del salvataggio
+    $validated['artists'] = json_encode($validated['artists']);
+    $validated['writers'] = json_encode($validated['writers']);
 
-        // Crea un nuovo fumetto nel database utilizzando i dati validati
-        $comic = Comic::create($validated);
+    // Crea un nuovo fumetto nel database utilizzando i dati validati
+    $comic = Comic::create($validated);
 
-        // Reindirizza l'utente a una pagina appropriata dopo il salvataggio
-        return redirect()->route('comics.show', $comic);
-    }
+    // Reindirizza l'utente a una pagina appropriata dopo il salvataggio
+    return redirect()->route('comics.show', $comic);
+}
 
     /**
      * Display the specified resource.
@@ -90,36 +103,38 @@ class ComicController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Comic $comic)
-    {
-        // Converti le stringhe separate da virgole in array
-        $request->merge([
-            'artists' => explode(',', $request->input('artists')),
-            'writers' => explode(',', $request->input('writers')),
-        ]);
+{
+    // Converti le stringhe separate da virgole in array
+    $request->merge([
+        'artists' => explode(',', $request->input('artists')),
+        'writers' => explode(',', $request->input('writers')),
+    ]);
 
-        // Validazione dei dati in entrata
-        $validated = $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
-            'thumb' => 'required|url',
-            'price' => 'required|numeric',
-            'series' => 'required|string',
-            'sale_date' => 'required|date',
-            'type' => 'required|string',
-            'artists' => 'required|array',
-            'writers' => 'required|array',
-        ]);
+    // Validazione dei dati in entrata con messaggi di errore personalizzati
+    $validated = $request->validate([
+        'title' => 'required|max:255',
+        'description' => 'required',
+        'thumb' => 'required|url',
+        'price' => 'required|numeric',
+        'series' => 'required|string',
+        'sale_date' => 'required|date',
+        'type' => 'required|string',
+        'artists' => 'required|array',
+        'writers' => 'required|array',
+    ], [
+        // Aggiungi qui i messaggi di errore personalizzati come sopra
+    ]);
 
-        // Converti gli array in stringhe JSON prima del salvataggio
-        $validated['artists'] = json_encode($validated['artists']);
-        $validated['writers'] = json_encode($validated['writers']);
+    // Converti gli array in stringhe JSON prima del salvataggio
+    $validated['artists'] = json_encode($validated['artists']);
+    $validated['writers'] = json_encode($validated['writers']);
 
-        // Aggiorna il fumetto nel database utilizzando i dati validati
-        $comic->update($validated);
+    // Aggiorna il fumetto nel database utilizzando i dati validati
+    $comic->update($validated);
 
-        // Reindirizza l'utente a una pagina appropriata dopo l'aggiornamento
-        return redirect()->route('comics.show', $comic);
-    }
+    // Reindirizza l'utente a una pagina appropriata dopo l'aggiornamento
+    return redirect()->route('comics.show', $comic);
+}
 
     /**
      * Remove the specified resource from storage.
